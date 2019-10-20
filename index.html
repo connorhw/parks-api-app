@@ -9,12 +9,15 @@
 <body>
     <div class="main">
         <form id="park-form" action="">
-            <h2>See every National Park in any state!</h2>
-            <input type="text" name="input-state" id="js-input-state" placeholder="Insert state here..." >
-            <button type="submit" >Search</button>
+            <h1>See a list of parks in the state of your choice!</h1>
+            <label for="input-state">State</label></br>
+            <input type="text" name="input-state" id="js-input-state" placeholder="Insert 2-letter state code" ></br></br>
+            <label for="input-limit">Maximum number of results to return</label></br>
+            <input type="number" name="input-limit" id="js-input-limit" value="10"></br></br>
+            <button type="submit" >Search</button></br>
         </form>
         <section class="results hidden">
-            <h3>Park List</h3>
+            <h3>=== Park List ===</h3>
             <div class="park-list"></div>
         </section>
     </div>

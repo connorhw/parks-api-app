@@ -1,16 +1,16 @@
 'use strict';
 
 const apiKey = 'lDMCSPBZQ0osm3rO0Pufbe26dx33thzS8cU2Uh49';
-const baseURL = 'https://www.developer.nps.gov/api/v1/parks';
+const baseURL = 'https://developer.nps.gov/api/v1/parks';
 
 
 
-function getParkList(query) {
+function getParkList(state, limit) {
 
     const params = {
-        q: query,
-        //limit,
-        key: apiKey
+        stateCode: state,
+        limit,
+        api_key: apiKey
     
     };
     //$('.park-list').empty();
@@ -19,19 +19,31 @@ function getParkList(query) {
     console.log(url);
     //console.log(state);
     fetch(url)
-        .then(response => response.json())
-        .then(responseJson => {
-            if (responseJson.code === 404) {
-                alert("Try again...");
-            }else{
-                displayResults(responseJson);
+        .then(response => {
+            if (response.ok) {
+                return response.json();
             }
+            throw new Error(response.statusText);
         })
+        .then(responseJson => displayResults(responseJson))
+        /*.catch(err => {
+
+        })*/
     
 }
 
-function displayResults() {
+function displayResults(responseJson) {
     console.log(responseJson);
+    $('.park-list').empty();
+    for (let i = 0; i < responseJson.data.length; i++) {
+        $('.park-list').append(
+            `<li>
+             <h2>${responseJson.data[i].fullName}</h2>
+             <div>| ${responseJson.data[i].url} |</div>
+             <p>${responseJson.data[i].description}</p>
+            </li>`
+        )};
+        $('.results').removeClass('hidden');
 }
 
 function formatQueryParams(params) {
@@ -39,12 +51,17 @@ function formatQueryParams(params) {
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
     return queryItems.join('&');
 }
-
+/*
+function getStateCode(state) {
+    
+}
+*/
 function watchForm() {
-    $('park-form').submit(function(event) {
+    $('#park-form').submit(function(event) {
         event.preventDefault();
         const state = $('#js-input-state').val();
-        getParkList(state);
+        const limit = $('#js-input-limit').val();
+        getParkList(state, limit);
     });
 }
 
